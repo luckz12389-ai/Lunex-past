@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Lunex Paste",
+    "slug": "lunex-paste",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "android": {
+      "package": "com.lunex.paste",
+      "versionCode": 1,
+      "permissions": []
+    }
+  }
+}

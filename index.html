@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lunex Paste</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#08080d;color:#eee;font-family:system-ui,sans-serif;padding:24px}
+main{max-width:850px;margin:40px auto}.brand{font-size:30px;font-weight:900;letter-spacing:2px}.purple{color:#a855f7}
+.card{margin-top:24px;background:#12121c;border:1px solid #30263f;border-radius:16px;padding:20px}
+h1{font-size:22px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#08080d;padding:18px;border-radius:10px;color:#d8b4fe}
+button{background:#9333ea;color:white;border:0;border-radius:8px;padding:12px 16px;font-weight:800}
+.muted{color:#999}
+</style>
+</head>
+<body><main>
+<div class="brand">LUNEX <span class="purple">PASTE</span></div>
+<p class="muted">CÓDIGO COMPARTILHADO</p>
+<div class="card" id="result"><h1>Carregando paste...</h1></div>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+const url = 'REPLACE_SUPABASE_URL';
+const key = 'REPLACE_SUPABASE_ANON_KEY';
+const out = document.getElementById('result');
+async function run(){
+ if(!id){out.innerHTML='<h1>Nenhum paste selecionado</h1><p class="muted">Abra um link de compartilhamento válido.</p>';return}
+ if(url.startsWith('REPLACE_')||key.startsWith('REPLACE_')){out.innerHTML='<h1>Site ainda não configurado</h1>';return}
+ try{
+  const r=await fetch(url+'/rest/v1/pastes?id=eq.'+encodeURIComponent(id)+'&is_public=eq.true&select=title,content,created_at',{headers:{apikey:key,Authorization:'Bearer '+key}});
+  const data=await r.json();
+  if(!r.ok||!data.length){out.innerHTML='<h1>Paste não encontrado</h1>';return}
+  const item=data[0];
+  const h=document.createElement('h1');h.textContent=item.title;
+  const pre=document.createElement('pre');pre.textContent=item.content;
+  const b=document.createElement('button');b.textContent='COPIAR CÓDIGO';b.onclick=()=>navigator.clipboard.writeText(item.content).then(()=>b.textContent='COPIADO!');
+  out.replaceChildren(h,pre,b);
+ }catch(e){out.textContent='Não foi possível carregar este paste.'}
+}
+run();
+</script>
+</body>
+</html>
